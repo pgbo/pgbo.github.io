@@ -1,93 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
-<head>
-  <meta charset="utf-8">
-  <title>光波 Develop for iOS</title>
-  <meta name="author" content="光波">
-
-  
-  <meta name="description" content="背景 在开发iOS应用过程中，不免会和数据的操作打交道，为了方便和快速，你可以选择基于sqlite的第三方库如FMDB。当然你也可能像我一样，花点时间了解一下Core Data，自己动手解决数据库操作的问题，其中一个稍微复杂的问题就是多线程下数据操作的问题。 话说事情的发展是这样的， &hellip;">
-  
-
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  
-  <link rel="canonical" href="http://pgbo.github.io/">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="光波 Develop for iOS" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="/javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-
-  
-
-</head>
-
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">光波 Develop for iOS</a></h1>
-  
-    <h2>沉淀积累，记录自己的开发点滴</h2>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="sitesearch" value="pgbo.github.io">
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div class="blog-index">
-  
-  
-  
-    <article>
-      
-  <header>
+  <title><![CDATA[Category: 多线程 | 光波 Develop for iOS]]></title>
+  <link href="http://pgbo.github.io/blog/categories/duo-xian-cheng/atom.xml" rel="self"/>
+  <link href="http://pgbo.github.io/"/>
+  <updated>2015-04-18T02:58:55+08:00</updated>
+  <id>http://pgbo.github.io/</id>
+  <author>
+    <name><![CDATA[光波]]></name>
     
-      <h1 class="entry-title"><a href="/blog/2015/04/13/use-core-data-under-multi-threads/">在多线程下使用Core Data</a></h1>
-    
-    
-      <p class="meta">
-        
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
 
-
-
-
-<time class='entry-date' datetime='2015-04-13T00:05:09+08:00'><span class='date'><span class='date-month'>Apr</span> <span class='date-day'>13</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>12:05 am</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>背景</h3>
+  
+  <entry>
+    <title type="html"><![CDATA[在多线程下使用Core Data]]></title>
+    <link href="http://pgbo.github.io/blog/2015/04/13/use-core-data-under-multi-threads/"/>
+    <updated>2015-04-13T00:05:09+08:00</updated>
+    <id>http://pgbo.github.io/blog/2015/04/13/use-core-data-under-multi-threads</id>
+    <content type="html"><![CDATA[<h3>背景</h3>
 
 <p>在开发iOS应用过程中，不免会和数据的操作打交道，为了方便和快速，你可以选择基于sqlite的第三方库如<code>FMDB</code>。当然你也可能像我一样，花点时间了解一下Core Data，自己动手解决数据库操作的问题，其中一个稍微复杂的问题就是多线程下数据操作的问题。</p>
 
@@ -131,10 +62,7 @@
 <p>引入了多线程，就要面对这个头痛的问题。<code>queue-based concurrency</code>的<code>MOC</code>通过使用<code>performBlock:</code>和<code>performBlockAndWait:</code>来保证在他们的代码块里的<code>NSManagedObject</code>线程安全。为了更好的让大家了解如何安全的使用Core Data，下面举一些例子。</p>
 
 <ul>
-<li>用例1，插入一条数据：</li>
-</ul>
-
-
+<li>用例1，插入一条数据：
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -153,32 +81,32 @@
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
 <span class='line-number'>18</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// 在某上下文中</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// 在某上下文中&lt;/li&gt;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="c1">// 选择正确的MOC</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">// 选择正确的MOC</span>
 </span><span class='line'><span class="bp">NSManagedObjectContext</span> <span class="o">*</span><span class="n">moc</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
 </span><span class='line'><span class="k">if</span> <span class="p">([</span><span class="n">ThreadUtil</span> <span class="n">currentInMainThread</span><span class="p">])</span> <span class="p">{</span>
 </span><span class='line'><span class="n">moc</span> <span class="o">=</span> <span class="n">mainMOC</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 </span><span class='line'><span class="n">moc</span> <span class="o">=</span> <span class="n">privateMOC</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="c1">// NSManagedObject错误的创建位置, 这里创建的NSManagedObject不安全</span>
-</span><span class='line'><span class="c1">// NSManagedObject *moj = [NSMangedObject createXXXX];</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">// NSManagedObject错误的创建位置, 这里创建的NSManagedObject不安全</span>
+</span><span class='line'><span class="c1">// NSManagedObject *moj = [NSMangedObject createXXXX];&lt;/p&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="p">[</span><span class="n">moc</span> <span class="nl">performBlockAndWait</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">[</span><span class="n">moc</span> <span class="nl">performBlockAndWait</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
 </span><span class='line'><span class="c1">// NSManagedObject正确的创建位置</span>
 </span><span class='line'><span class="bp">NSManagedObject</span> <span class="o">*</span><span class="n">moj</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSMangedObject</span> <span class="n">createXXXX</span><span class="p">];</span>
-</span><span class='line'><span class="p">[</span><span class="n">privateMOC</span> <span class="nl">save</span><span class="p">:</span><span class="o">&amp;</span><span class="n">error</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">privateMOC</span> <span class="nl">save</span><span class="p">:</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">error</span><span class="p">];</span>
 </span><span class='line'><span class="p">}];</span>
-</span></code></pre></td></tr></table></div></figure>
-
+</span></code></pre></td></tr></table></div></figure></p>
 
 <ul>
-<li>用例2，查询某数据列表：</li>
-</ul>
-
-
+<li>用例2，查询某数据列表：
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -193,25 +121,27 @@
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// 在某上下文中</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// 在某上下文中&lt;/li&gt;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="bp">NSFetchRequest</span> <span class="o">*</span><span class="n">req</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSFetchRequest</span> <span class="n">createRequestXXX</span><span class="p">];</span>
-</span><span class='line'><span class="bp">NSArray</span> <span class="o">*</span><span class="n">results</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="bp">NSFetchRequest</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">req</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSFetchRequest</span> <span class="n">createRequestXXX</span><span class="p">];</span>
+</span><span class='line'><span class="bp">NSArray</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">results</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
 </span><span class='line'><span class="c1">// 选择正确的MOC</span>
 </span><span class='line'><span class="k">if</span> <span class="p">([</span><span class="n">ThreadUtil</span> <span class="n">currentInMainThread</span><span class="p">])</span> <span class="p">{</span>
 </span><span class='line'><span class="p">[</span><span class="n">mainMOC</span> <span class="nl">performBlockAndWait</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
 </span><span class='line'><span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">mainMOC</span> <span class="n">excuteXXX</span><span class="p">];</span>
-</span><span class='line'><span class="p">}];</span>
+</span><span class='line'><span class="p">}];</span>        <span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
 </span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 </span><span class='line'><span class="p">[</span><span class="n">privateMOC</span> <span class="nl">performBlockAndWait</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
 </span><span class='line'><span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">privateMOC</span> <span class="n">excuteXXX</span><span class="p">];</span>
 </span><span class='line'><span class="p">}];</span>
 </span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></p>
 
-
-<p>用例3，删除某些数据：</p>
-
+<p>用例3，删除某些数据：
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -236,35 +166,33 @@
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
 <span class='line-number'>24</span>
-</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// 在某上下文中</span>
+</pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// 在某上下文中&lt;/p&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="c1">// 选择正确的MOC</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">// 选择正确的MOC</span>
 </span><span class='line'><span class="bp">NSManagedObjectContext</span> <span class="o">*</span><span class="n">moc</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
 </span><span class='line'><span class="k">if</span> <span class="p">([</span><span class="n">ThreadUtil</span> <span class="n">currentInMainThread</span><span class="p">])</span> <span class="p">{</span>
 </span><span class='line'><span class="n">moc</span> <span class="o">=</span> <span class="n">mainMOC</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 </span><span class='line'><span class="n">moc</span> <span class="o">=</span> <span class="n">privateMOC</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="c1">// 先查询出数据对应数据</span>
-</span><span class='line'><span class="bp">NSFetchRequest</span> <span class="o">*</span><span class="n">req</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSFetchRequest</span> <span class="n">createRequestXXX</span><span class="p">];</span>
-</span><span class='line'><span class="bp">NSArray</span> <span class="o">*</span><span class="n">results</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">// 先查询出数据对应数据</span>
+</span><span class='line'><span class="bp">NSFetchRequest</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">req</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSFetchRequest</span> <span class="n">createRequestXXX</span><span class="p">];</span>
+</span><span class='line'><span class="bp">NSArray</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">results</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
 </span><span class='line'><span class="p">[</span><span class="n">moc</span> <span class="nl">performBlockAndWait</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
 </span><span class='line'><span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">privateMOC</span> <span class="n">excuteXXX</span><span class="p">];</span>
 </span><span class='line'><span class="c1">// 在mod的block里执行删除，不要跑到block外去删除，否则会造成NSManagedObject不安全</span>
-</span><span class='line'><span class="k">for</span> <span class="p">(</span><span class="bp">NSManagedObject</span> <span class="o">*</span><span class="n">moj</span> <span class="k">in</span> <span class="n">results</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="k">for</span> <span class="p">(</span><span class="bp">NSManagedObject</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">moj</span> <span class="k">in</span> <span class="n">results</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'><span class="p">[</span><span class="n">privateMOC</span> <span class="nl">deleteObject</span><span class="p">:</span><span class="n">moj</span><span class="p">];</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'><span class="p">}];</span>
 </span><span class='line'><span class="c1">// 删除NSManagedObject错误的位置，在这里NSMangedObject会不安全</span>
-</span><span class='line'><span class="c1">//for (NSManagedObject *moj in results) {</span>
+</span><span class='line'><span class="c1">//for (NSManagedObject &lt;/em&gt;moj in results) {</span>
 </span><span class='line'><span class="c1">//    [moj.managedContext deleteObject:moj];</span>
 </span><span class='line'><span class="c1">//}</span>
-</span></code></pre></td></tr></table></div></figure>
+</span></code></pre></td></tr></table></div></figure></p>
 
-
-<p>用例4，更新某条数据：</p>
-
+<p>用例4，更新某条数据：
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -295,10 +223,10 @@
 <span class='line-number'>28</span>
 </pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// 上下文</span>
 </span><span class='line'><span class="c1">// 先根据条件查询相应数据</span>
-</span><span class='line'><span class="bp">NSFetchRequest</span> <span class="o">*</span><span class="n">req</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSFetchRequest</span> <span class="n">createRequestXXX</span><span class="p">];</span>
-</span><span class='line'><span class="bp">NSArray</span> <span class="o">*</span><span class="n">results</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="bp">NSFetchRequest</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">req</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSFetchRequest</span> <span class="n">createRequestXXX</span><span class="p">];</span>
+</span><span class='line'><span class="bp">NSArray</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">results</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
 </span><span class='line'><span class="c1">// 选择正确的MOC</span>
-</span><span class='line'><span class="bp">NSManagedObjectContext</span> <span class="o">*</span><span class="n">moc</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="bp">NSManagedObjectContext</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">moc</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
 </span><span class='line'><span class="k">if</span> <span class="p">([</span><span class="n">ThreadUtil</span> <span class="n">currentInMainThread</span><span class="p">])</span> <span class="p">{</span>
 </span><span class='line'><span class="n">moc</span> <span class="o">=</span> <span class="n">mainMOC</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
@@ -306,79 +234,27 @@
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'><span class="p">[</span><span class="n">moc</span> <span class="nl">performBlockAndWait</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
 </span><span class='line'><span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">moc</span> <span class="n">excuteXXX</span><span class="p">];</span>
-</span><span class='line'><span class="c1">// 正确地更新位置：在block里执行更新操作 </span>
-</span><span class='line'><span class="k">for</span> <span class="p">(</span><span class="bp">NSManagedObject</span> <span class="o">*</span><span class="n">moj</span> <span class="k">in</span> <span class="n">results</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'><span class="c1">// 正确地更新位置：在block里执行更新操作</span>
+</span><span class='line'><span class="k">for</span> <span class="p">(</span><span class="bp">NSManagedObject</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">moj</span> <span class="k">in</span> <span class="n">results</span><span class="p">)</span> <span class="p">{</span>
 </span><span class='line'><span class="n">moj</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">@</span><span class="err">“小明”</span><span class="p">;</span>
 </span><span class='line'><span class="n">moj</span><span class="p">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span> <span class="err">……</span>
 </span><span class='line'><span class="c1">// 提交会将变动冒泡到moc的parentContext</span>
-</span><span class='line'><span class="p">[</span><span class="n">moc</span> <span class="nl">save</span><span class="p">:</span><span class="o">&amp;</span><span class="n">err</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">moc</span> <span class="nl">save</span><span class="p">:</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">err</span><span class="p">];</span>
 </span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="p">}];</span>
+</span><span class='line'><span class="p">}];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 </span><span class='line'>
-</span><span class='line'><span class="c1">// 错误地更新位置，不在block里执行会引起NSManagedObject的不安全 </span>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">// 错误地更新位置，不在block里执行会引起NSManagedObject的不安全</span>
 </span><span class='line'><span class="c1">//for (NSManagedObject *moj in results) {</span>
 </span><span class='line'><span class="c1">//     moj.name = @“小明”;</span>
 </span><span class='line'><span class="c1">//     moj.age = 22; ……</span>
-</span><span class='line'><span class="c1">//     [moc save:&amp;err];</span>
+</span><span class='line'><span class="c1">//     [moc save:&amp;amp;err];</span>
 </span><span class='line'><span class="c1">//}</span>
-</span></code></pre></td></tr></table></div></figure>
-
+</span></code></pre></td></tr></table></div></figure></p>
 
 <h3>有没有形成可复用的框架？</h3>
 
 <p>基于<code>queue-based concurrency</code>方式，有人提出<code>Asyschronized saving</code>模型，其精髓是把<code>Main MOC</code>的<code>parent</code>设置为一个<code>private MOC</code>, 然后把<code>persistent store coordinator</code>设置给这个最顶层的<code>private MOC</code>，在这个模型中，底层的<code>MOC</code>只要<code>save</code>，就会向它的<code>parent MOC</code>提交变化，比如界面上的创建和修改数据操作可以异步提交给<code>main moc</code>的<code>parent moc</code>, 该<code>moc</code>可以进行异步保存，<strong>所以界面不会卡顿</strong>。我自己基于这个<code>Asyschronized saving</code>模型，写了一些可复用的代码，能有效预防多线程下Core Data使用不安全的问题，同时在并发下对于数据的增删改查有不错的效果，具体可以在github上看代码和介绍文档<a href="https://github.com/pgbo/LvMultiThreadCoreDataDao" title="LvMultiThreadCoreDataDao">LvMultiThreadCoreDataDao</a></p>
-</div>
+]]></content>
+  </entry>
   
-  
-
-
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2015/04/13/use-core-data-under-multi-threads/">在多线程下使用Core Data</a>
-      </li>
-    
-  </ul>
-</section>
-
-
-
-
-
-  
-</aside>
-
-    </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - 光波 -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-
-</footer>
-  
-
-
-
-
-
-
-
-
-
-
-
-</body>
-</html>
+</feed>
