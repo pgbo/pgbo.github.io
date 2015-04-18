@@ -53,7 +53,7 @@ moc = privateMOC;
 [moc performBlockAndWait:^{
 // NSManagedObject正确的创建位置
 NSManagedObject *moj = [NSMangedObject createXXXX];
-[privateMOC save:&error];
+[moc save:&error];
 }];
 ```
 
@@ -63,16 +63,18 @@ NSManagedObject *moj = [NSMangedObject createXXXX];
 
 NSFetchRequest *req = [NSFetchRequest createRequestXXX];
 NSArray *results = nil;
+
 // 选择正确的MOC
+NSManagedObjectContext *moc = nil;
 if ([ThreadUtil currentInMainThread]) {
-[mainMOC performBlockAndWait:^{
-results = [mainMOC excuteXXX];
-}];          
+moc = mainMOC;
 } else {
-[privateMOC performBlockAndWait:^{
-results = [privateMOC excuteXXX]; 
-}];
+moc = privateMOC;
 }
+// 选择正确的MOC
+[moc performBlockAndWait:^{
+results = [moc excuteXXX];
+}]; 
 ```
 
 用例3，删除某些数据：
@@ -91,10 +93,10 @@ moc = privateMOC;
 NSFetchRequest *req = [NSFetchRequest createRequestXXX];
 NSArray *results = nil;
 [moc performBlockAndWait:^{
-results = [privateMOC excuteXXX]; 
+results = [moc excuteXXX]; 
 // 在mod的block里执行删除，不要跑到block外去删除，否则会造成NSManagedObject不安全
 for (NSManagedObject *moj in results) {
-[privateMOC deleteObject:moj];
+[moc deleteObject:moj];
 }
 }];
 // 删除NSManagedObject错误的位置，在这里NSMangedObject会不安全
