@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Core Data | 光波 Develop for iOS]]></title>
   <link href="http://pgbo.github.io/blog/categories/core-data/atom.xml" rel="self"/>
   <link href="http://pgbo.github.io/"/>
-  <updated>2015-04-18T03:23:58+08:00</updated>
+  <updated>2015-04-18T09:08:41+08:00</updated>
   <id>http://pgbo.github.io/</id>
   <author>
     <name><![CDATA[光波]]></name>
@@ -101,7 +101,7 @@
 </span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">[</span><span class="n">moc</span> <span class="nl">performBlockAndWait</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
 </span><span class='line'><span class="c1">// NSManagedObject正确的创建位置</span>
 </span><span class='line'><span class="bp">NSManagedObject</span> <span class="o">*</span><span class="n">moj</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSMangedObject</span> <span class="n">createXXXX</span><span class="p">];</span>
-</span><span class='line'><span class="p">[</span><span class="n">privateMOC</span> <span class="nl">save</span><span class="p">:</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">error</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">moc</span> <span class="nl">save</span><span class="p">:</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">error</span><span class="p">];</span>
 </span><span class='line'><span class="p">}];</span>
 </span></code></pre></td></tr></table></div></figure></p>
 
@@ -123,22 +123,26 @@
 <span class='line-number'>14</span>
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
 </pre></td><td class='code'><pre><code class='objective-c'><span class='line'><span class="c1">// 在某上下文中&lt;/li&gt;</span>
 </span><span class='line'><span class="o">&lt;/</span><span class="n">ul</span><span class="o">&gt;</span>
 </span><span class='line'>
 </span><span class='line'>
 </span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="bp">NSFetchRequest</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">req</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSFetchRequest</span> <span class="n">createRequestXXX</span><span class="p">];</span>
-</span><span class='line'><span class="bp">NSArray</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">results</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
-</span><span class='line'><span class="c1">// 选择正确的MOC</span>
+</span><span class='line'><span class="bp">NSArray</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">results</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">// 选择正确的MOC</span>
+</span><span class='line'><span class="bp">NSManagedObjectContext</span> <span class="o">*</span><span class="n">moc</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
 </span><span class='line'><span class="k">if</span> <span class="p">([</span><span class="n">ThreadUtil</span> <span class="n">currentInMainThread</span><span class="p">])</span> <span class="p">{</span>
-</span><span class='line'><span class="p">[</span><span class="n">mainMOC</span> <span class="nl">performBlockAndWait</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
-</span><span class='line'><span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">mainMOC</span> <span class="n">excuteXXX</span><span class="p">];</span>
-</span><span class='line'><span class="p">}];</span>        <span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="n">moc</span> <span class="o">=</span> <span class="n">mainMOC</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-</span><span class='line'><span class="p">[</span><span class="n">privateMOC</span> <span class="nl">performBlockAndWait</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
-</span><span class='line'><span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">privateMOC</span> <span class="n">excuteXXX</span><span class="p">];</span>
-</span><span class='line'><span class="p">}];</span>
+</span><span class='line'><span class="n">moc</span> <span class="o">=</span> <span class="n">privateMOC</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="c1">// 选择正确的MOC</span>
+</span><span class='line'><span class="p">[</span><span class="n">moc</span> <span class="nl">performBlockAndWait</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'><span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">moc</span> <span class="n">excuteXXX</span><span class="p">];</span>
+</span><span class='line'><span class="p">}];</span>
 </span></code></pre></td></tr></table></div></figure></p>
 
 <p>用例3，删除某些数据：
@@ -180,10 +184,10 @@
 </span><span class='line'><span class="bp">NSFetchRequest</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">req</span> <span class="o">=</span> <span class="p">[</span><span class="bp">NSFetchRequest</span> <span class="n">createRequestXXX</span><span class="p">];</span>
 </span><span class='line'><span class="bp">NSArray</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">results</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
 </span><span class='line'><span class="p">[</span><span class="n">moc</span> <span class="nl">performBlockAndWait</span><span class="p">:</span><span class="o">^</span><span class="p">{</span>
-</span><span class='line'><span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">privateMOC</span> <span class="n">excuteXXX</span><span class="p">];</span>
+</span><span class='line'><span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">moc</span> <span class="n">excuteXXX</span><span class="p">];</span>
 </span><span class='line'><span class="c1">// 在mod的block里执行删除，不要跑到block外去删除，否则会造成NSManagedObject不安全</span>
 </span><span class='line'><span class="k">for</span> <span class="p">(</span><span class="bp">NSManagedObject</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">moj</span> <span class="k">in</span> <span class="n">results</span><span class="p">)</span> <span class="p">{</span>
-</span><span class='line'><span class="p">[</span><span class="n">privateMOC</span> <span class="nl">deleteObject</span><span class="p">:</span><span class="n">moj</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">moc</span> <span class="nl">deleteObject</span><span class="p">:</span><span class="n">moj</span><span class="p">];</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'><span class="p">}];</span>
 </span><span class='line'><span class="c1">// 删除NSManagedObject错误的位置，在这里NSMangedObject会不安全</span>
